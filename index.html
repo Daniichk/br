@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +17,6 @@
         #llama-btn { font-size: 140px; background: none; border: none; cursor: pointer; transition: transform 0.05s; filter: drop-shadow(0 0 20px rgba(5,217,232,0.4)); z-index: 5; }
         #llama-btn:active { transform: scale(0.85); }
 
-        /* Анимация клика */
         .click-note { position: absolute; color: var(--cyan); font-weight: bold; pointer-events: none; animation: floatUp 0.8s ease-out forwards; z-index: 100; font-size: 1.8rem; text-shadow: 0 0 5px #000; }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-120px); } }
 
@@ -30,6 +29,8 @@
         .modal { background: #0b0c10; border: 2px solid var(--cyan); padding: 20px; width: 450px; text-align: center; max-height: 90vh; overflow-y: auto; }
         input { background: #000; border: 1px solid var(--cyan); color: var(--cyan); padding: 10px; width: 70%; margin: 10px 0; text-align: center; font-family: inherit; }
         .grid-casino { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--cyan); }
     </style>
 </head>
 <body>
@@ -59,18 +60,18 @@
 <div id="modal-bank" class="overlay">
     <div class="modal" style="border-color:var(--yellow)">
         <h2 style="color:var(--yellow)">BANK TERMINAL | <span id="bank-balance">0</span> W</h2>
-        <input type="number" id="bank-deposit" placeholder="СУММА">
+        <input type="number" id="bank-deposit" placeholder="AMOUNT">
         <div class="grid-casino">
-            <button class="action-btn" onclick="Bank.lock(1, 1.1)">1 МИН (+10%)</button>
-            <button class="action-btn" onclick="Bank.lock(30, 1.8)">30 МИН (+80%)</button>
-            <button class="action-btn" onclick="Bank.lock(60, 4)">1 ЧАС (x4)</button>
-            <button class="action-btn" onclick="Bank.lock(1440, 150)">1 ДЕНЬ (x150)</button>
+            <button class="action-btn" onclick="Bank.lock(1, 1.1)">1 MIN (+10%)</button>
+            <button class="action-btn" onclick="Bank.lock(30, 1.8)">30 MIN (+80%)</button>
+            <button class="action-btn" onclick="Bank.lock(60, 4)">1 HOUR (x4)</button>
+            <button class="action-btn" onclick="Bank.lock(1440, 150)">1 DAY (x150)</button>
         </div>
         <div id="bank-timer" style="display:none; margin:15px 0;">
             <h2 id="b-time">00:00</h2>
-            <button class="action-btn" id="b-claim" disabled onclick="Bank.claim()">ЗАБРАТЬ</button>
+            <button class="action-btn" id="b-claim" disabled onclick="Bank.claim()">WITHDRAW</button>
         </div>
-        <button class="action-btn" style="width:100%" onclick="UI.hide()">ЗАКРЫТЬ</button>
+        <button class="action-btn" style="width:100%" onclick="UI.hide()">CLOSE</button>
     </div>
 </div>
 
@@ -78,44 +79,44 @@
     <div class="modal" style="border-color:var(--pink)">
         <h2 style="color:var(--pink)">NIGHT CITY CASINO | <span id="casino-balance">0</span> W</h2>
         <div id="casino-main" class="grid-casino">
-            <button class="action-btn pink" onclick="Casino.open('coin')">МОНЕТКА</button>
-            <button class="action-btn pink" onclick="Casino.open('slots')">СЛОТЫ</button>
-            <button class="action-btn pink" onclick="Casino.open('crash')">КРАШ</button>
-            <button class="action-btn pink" onclick="Casino.open('mines')">МИНЫ</button>
+            <button class="action-btn pink" onclick="Casino.open('coin')">COIN FLIP</button>
+            <button class="action-btn pink" onclick="Casino.open('slots')">SLOTS</button>
+            <button class="action-btn pink" onclick="Casino.open('crash')">CRASH</button>
+            <button class="action-btn pink" onclick="Casino.open('mines')">MINES</button>
         </div>
         <div id="game-coin" style="display:none;">
-            <div id="coin-res" style="margin:10px;">ОРЕЛ ИЛИ РЕШКА?</div>
-            <input type="number" id="coin-bet" placeholder="СТАВКА">
-            <button class="action-btn" onclick="Casino.playCoin('HEADS')">ОРЕЛ</button>
-            <button class="action-btn" onclick="Casino.playCoin('TAILS')">РЕШКА</button>
+            <div id="coin-res" style="margin:10px;">HEADS OR TAILS?</div>
+            <input type="number" id="coin-bet" placeholder="BET">
+            <button class="action-btn" onclick="Casino.playCoin('HEADS')">HEADS</button>
+            <button class="action-btn" onclick="Casino.playCoin('TAILS')">TAILS</button>
         </div>
         <div id="game-slots" style="display:none;">
             <div id="slot-res" style="font-size:40px; margin:10px;">[ ? ? ? ]</div>
-            <input type="number" id="slot-bet" placeholder="СТАВКА">
-            <button class="action-btn pink" onclick="Casino.playSlots()">КРУТИТЬ</button>
+            <input type="number" id="slot-bet" placeholder="BET">
+            <button class="action-btn pink" onclick="Casino.playSlots()">SPIN</button>
         </div>
         <div id="game-crash" style="display:none;">
             <div id="crash-mult" style="font-size:40px; color:var(--pink)">1.00x</div>
-            <input type="number" id="crash-bet" placeholder="СТАВКА">
-            <button class="action-btn pink" id="crash-start" onclick="Casino.startCrash()">СТАРТ</button>
-            <button class="action-btn" id="crash-stop" style="display:none" onclick="Casino.stopCrash()">ЗАБРАТЬ</button>
+            <input type="number" id="crash-bet" placeholder="BET">
+            <button class="action-btn pink" id="crash-start" onclick="Casino.startCrash()">START</button>
+            <button class="action-btn" id="crash-stop" style="display:none" onclick="Casino.stopCrash()">CASH OUT</button>
         </div>
         <div id="game-mines" style="display:none;">
             <div id="mines-grid" style="display:grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 10px auto; width: 250px;"></div>
-            <input type="number" id="mines-bet" placeholder="СТАВКА">
-            <button class="action-btn pink" id="mines-start" onclick="Casino.startMines()">ИГРАТЬ</button>
-            <button class="action-btn" id="mines-cashout" style="display:none" onclick="Casino.stopMines()">ЗАБРАТЬ</button>
+            <input type="number" id="mines-bet" placeholder="BET">
+            <button class="action-btn pink" id="mines-start" onclick="Casino.startMines()">PLAY</button>
+            <button class="action-btn" id="mines-cashout" style="display:none" onclick="Casino.stopMines()">CASH OUT</button>
         </div>
-        <button class="action-btn" style="width:100%; margin-top:15px" onclick="Casino.back()">НАЗАД / ВЫХОД</button>
+        <button class="action-btn" style="width:100%; margin-top:15px" onclick="Casino.back()">BACK / EXIT</button>
     </div>
 </div>
 
 <div id="modal-reset" class="overlay">
     <div class="modal" style="border-color:var(--danger)">
-        <h2 style="color:var(--danger)">ПРЕСТИЖ</h2>
-        <p>1 МЛРД ШЕРСТИ = +1% К БОНУСУ</p>
-        <button class="action-btn" style="width:100%" onclick="alert('НЕДОСТАТОЧНО ШЕРСТИ')">СБРОСИТЬ ВСЁ</button>
-        <button class="action-btn" style="width:100%" onclick="UI.hide()">ОТМЕНА</button>
+        <h2 style="color:var(--danger)">PRESTIGE PROTOCOL</h2>
+        <p>1B WOOL = +1% PERMANENT BONUS</p>
+        <button class="action-btn" style="width:100%" onclick="alert('NOT ENOUGH WOOL')">BURN PROGRESS</button>
+        <button class="action-btn" style="width:100%" onclick="UI.hide()">ABORT</button>
     </div>
 </div>
 
@@ -125,17 +126,17 @@ const Core = {
     db: { click: [], auto: [], design: [] },
     
     generateDB() {
-        const skins = ["🐑","🐕","🐈","🦁","🦊","🐻","🐼","🐨","🦦","🐉","🦄","🦖","🐙","🦈","👽","🤖","👻","🧛","🧚","🧞","🧙","🧑‍🚀","👹","🌑","🌌","🔥","💎","☄️","🪐","🧿"];
+        const skins = ["🐑","🐕","🐈","Lion","🦊","🐻","🐼","🐨","🦦","🐉","🦄","🦖","🐙","🦈","👽","🤖","Ghost","🧛","🧚","🧞","🧙","Astro","👹","🌑","🌌","🔥","💎","☄️","🪐","🧿"];
         for(let i=1; i<=30; i++) {
-            this.db.click.push({ id: `c${i}`, n: `Модуль Силы v${i}`, p: Math.floor(20 * Math.pow(1.8, i)), v: Math.floor(3 * Math.pow(1.6, i)) });
-            this.db.auto.push({ id: `a${i}`, n: `Бот-Сборщик v${i}`, p: Math.floor(100 * Math.pow(1.9, i)), v: Math.floor(8 * Math.pow(1.7, i)) });
-            this.db.design.push({ id: `d${i}`, n: `Скин: ${skins[i-1]}`, p: Math.floor(500 * Math.pow(2.1, i)), icon: skins[i-1] });
+            this.db.click.push({ id: `c${i}`, n: `Power Core v${i}`, p: Math.floor(20 * Math.pow(1.8, i)), v: Math.floor(3 * Math.pow(1.6, i)) });
+            this.db.auto.push({ id: `a${i}`, n: `Collector Bot v${i}`, p: Math.floor(100 * Math.pow(1.9, i)), v: Math.floor(8 * Math.pow(1.7, i)) });
+            this.db.design.push({ id: `d${i}`, n: `Skin: ${skins[i-1]}`, p: Math.floor(500 * Math.pow(2.1, i)), icon: skins[i-1] });
         }
     },
 
     init() {
         this.generateDB();
-        const saved = localStorage.getItem('llama_ultimate');
+        const saved = localStorage.getItem('llama_ultimate_en');
         if(saved) this.save = JSON.parse(saved);
         document.getElementById('llama-btn').onclick = (e) => this.doClick(e);
         setInterval(() => this.tick(), 1000);
@@ -165,14 +166,14 @@ const Core = {
             const d = this.save.bank.end - Date.now();
             if(d <= 0) {
                 document.getElementById('b-claim').disabled = false;
-                document.getElementById('b-time').innerText = "ГОТОВО";
+                document.getElementById('b-time').innerText = "READY";
             } else {
                 let h = Math.floor(d/3600000), m = Math.floor((d%3600000)/60000), s = Math.floor((d%60000)/1000);
                 document.getElementById('b-time').innerText = `${h}:${m<10?'0':''}${m}:${s<10?'0':''}${s}`;
             }
         }
         this.update();
-        localStorage.setItem('llama_ultimate', JSON.stringify(this.save));
+        localStorage.setItem('llama_ultimate_en', JSON.stringify(this.save));
     },
 
     update() {
@@ -218,7 +219,7 @@ const UI = {
 const Bank = {
     lock(m, mult) {
         const val = parseInt(document.getElementById('bank-deposit').value);
-        if(val > Core.save.wool || val <= 0) return alert("НЕТ СРЕДСТВ");
+        if(val > Core.save.wool || val <= 0) return alert("INSUFFICIENT FUNDS");
         Core.save.wool -= val;
         Core.save.bank = { active: true, end: Date.now() + (m * 60000), val: Math.floor(val * mult) };
         document.getElementById('bank-timer').style.display = 'block';
@@ -232,7 +233,7 @@ const Bank = {
 const Casino = {
     open(g) { document.getElementById('casino-main').style.display = 'none'; document.getElementById('game-'+g).style.display = 'block'; },
     back() { 
-        if(this.crashInterval || this.minesActive) return alert("СНАЧАЛА ЗАКОНЧИТЕ ИГРУ");
+        if(this.crashInterval || this.minesActive) return alert("FINISH YOUR GAME FIRST");
         document.querySelectorAll('[id^="game-"]').forEach(e => e.style.display = 'none');
         document.getElementById('casino-main').style.display = 'grid'; 
         UI.hide();
@@ -242,7 +243,7 @@ const Casino = {
         if(bet > Core.save.wool || bet <= 0) return;
         Core.save.wool -= bet;
         const res = Math.random() > 0.5 ? 'HEADS' : 'TAILS';
-        document.getElementById('coin-res').innerText = "РЕЗУЛЬТАТ: " + (res === 'HEADS' ? "ОРЕЛ" : "РЕШКА");
+        document.getElementById('coin-res').innerText = "RESULT: " + res;
         if(side === res) Core.save.wool += bet * 2;
         Core.update();
     },
