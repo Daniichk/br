@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CYBER LLAMA: ULTIMATE EDITION</title>
+    <title>CYBER LLAMA: THE ULTIMATE CLICKER</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap');
         :root { --bg: #0b0c10; --panel: rgba(31, 40, 51, 0.9); --cyan: #05d9e8; --pink: #ff2a6d; --yellow: #f1c40f; --text: #e0e6ed; --danger: #d90429; }
@@ -12,133 +12,167 @@
         .sidebar { background: var(--panel); border-right: 2px solid var(--cyan); display: flex; flex-direction: column; padding: 20px; overflow-y: auto; backdrop-filter: blur(10px); }
         .sidebar.right { border-right: none; border-left: 2px solid var(--pink); }
         .main-engine { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        .hud-display { text-align: center; background: rgba(0,0,0,0.8); padding: 20px 40px; border: 2px solid var(--cyan); box-shadow: 0 0 15px rgba(5,217,232,0.4); margin-bottom: 20px; }
+        .hud-display { text-align: center; background: rgba(0,0,0,0.8); padding: 20px 40px; border: 2px solid var(--cyan); margin-bottom: 20px; z-index: 10; }
         #wool-val { font-size: 3.5rem; font-weight: 700; color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
-        #llama-btn { font-size: 140px; background: none; border: none; cursor: pointer; transition: transform 0.05s; filter: drop-shadow(0 0 20px rgba(5,217,232,0.4)); }
+        #llama-btn { font-size: 140px; background: none; border: none; cursor: pointer; transition: transform 0.05s; filter: drop-shadow(0 0 20px rgba(5,217,232,0.4)); z-index: 5; }
         #llama-btn:active { transform: scale(0.85); }
-        .upgrade-card { background: rgba(0,0,0,0.5); border: 1px solid var(--cyan); padding: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+
+        /* Анимация клика */
+        .click-note { position: absolute; color: var(--cyan); font-weight: bold; pointer-events: none; animation: floatUp 0.8s ease-out forwards; z-index: 100; font-size: 1.8rem; text-shadow: 0 0 5px #000; }
+        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-120px); } }
+
+        .upgrade-card { background: rgba(0,0,0,0.5); border: 1px solid var(--cyan); padding: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
         .upgrade-card:hover:not(.disabled) { background: rgba(5, 217, 232, 0.15); box-shadow: inset 0 0 10px var(--cyan); }
         .upgrade-card.disabled { opacity: 0.3; cursor: not-allowed; }
-        .card-header { display: flex; justify-content: space-between; font-weight: bold; }
-        .action-btn { background: #000; border: 2px solid var(--cyan); color: var(--cyan); padding: 12px; font-family: inherit; font-weight: bold; cursor: pointer; margin: 5px; transition: 0.2s; }
+        .action-btn { background: #000; border: 2px solid var(--cyan); color: var(--cyan); padding: 10px; font-family: inherit; font-weight: bold; cursor: pointer; margin: 3px; transition: 0.2s; }
         .action-btn:hover { background: var(--cyan); color: #000; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(10px); }
-        .modal { background: #0b0c10; border: 2px solid var(--cyan); padding: 30px; width: 450px; text-align: center; }
-        input { background: #000; border: 1px solid var(--cyan); color: var(--cyan); padding: 10px; width: 80%; margin: 10px 0; text-align: center; font-family: inherit; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: var(--cyan); }
+        .modal { background: #0b0c10; border: 2px solid var(--cyan); padding: 20px; width: 450px; text-align: center; max-height: 90vh; overflow-y: auto; }
+        input { background: #000; border: 1px solid var(--cyan); color: var(--cyan); padding: 10px; width: 70%; margin: 10px 0; text-align: center; font-family: inherit; }
+        .grid-casino { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     </style>
 </head>
 <body>
 <div class="game-wrapper">
     <div class="sidebar">
-        <h3 style="color:var(--cyan)">POWER (CLICK)</h3>
-        <div id="list-click"></div>
-        <h3 style="color:var(--yellow); margin-top:20px;">DESIGN (SKINS)</h3>
-        <div id="list-design"></div>
+        <h3 style="color:var(--cyan)">POWER (CLICK)</h3><div id="list-click"></div>
+        <h3 style="color:var(--yellow); margin-top:20px;">DESIGN (SKINS)</h3><div id="list-design"></div>
     </div>
-    <div class="main-engine">
+    <div class="main-engine" id="click-zone">
         <div class="hud-display">
             <div id="wool-val">0</div>
-            <div id="rank-tag" style="background:var(--pink); color:#000; padding:2px 10px; font-weight:bold; font-size: 14px;">NOVICE</div>
-            <div style="margin-top:10px; font-size:14px;">
-                CLICK: <span id="stat-click" style="color:var(--cyan)">1</span> | APS: <span id="stat-ps" style="color:var(--pink)">0</span>
-            </div>
+            <div id="rank-tag" style="background:var(--pink); color:#000; padding:2px 10px; font-weight:bold;">STREET_KID</div>
+            <div style="margin-top:10px; font-size:14px;">CLICK: <span id="stat-click" style="color:var(--cyan)">1</span> | APS: <span id="stat-ps" style="color:var(--pink)">0</span></div>
         </div>
         <button id="llama-btn">🦙</button>
-        <div style="margin-top:30px; display:flex;">
+        <div style="margin-top:30px;">
             <button class="action-btn" style="border-color:var(--pink); color:var(--pink)" onclick="UI.show('modal-casino')">CASINO</button>
             <button class="action-btn" style="border-color:var(--yellow); color:var(--yellow)" onclick="UI.show('modal-bank')">BANK</button>
         </div>
     </div>
     <div class="sidebar right">
-        <h3 style="color:var(--pink)">AUTO_SCRIPTS</h3>
-        <div id="list-auto"></div>
+        <h3 style="color:var(--pink)">AUTO_SCRIPTS</h3><div id="list-auto"></div>
         <button class="action-btn" style="margin-top:auto; border-color:var(--danger); color:var(--danger)" onclick="UI.show('modal-reset')">PRESTIGE</button>
     </div>
 </div>
 
 <div id="modal-bank" class="overlay">
     <div class="modal" style="border-color:var(--yellow)">
-        <h2 style="color:var(--yellow)">BANKING SYSTEM</h2>
-        <p>BALANCE: <span id="bank-balance">0</span> W</p>
-        <input type="number" id="bank-deposit" placeholder="AMOUNT">
-        <button class="action-btn" style="width:100%" onclick="Bank.lock(1, 1.2)">1 MIN (+20%)</button>
+        <h2 style="color:var(--yellow)">BANK TERMINAL | <span id="bank-balance">0</span> W</h2>
+        <input type="number" id="bank-deposit" placeholder="СУММА">
+        <div class="grid-casino">
+            <button class="action-btn" onclick="Bank.lock(1, 1.1)">1 МИН (+10%)</button>
+            <button class="action-btn" onclick="Bank.lock(30, 1.8)">30 МИН (+80%)</button>
+            <button class="action-btn" onclick="Bank.lock(60, 4)">1 ЧАС (x4)</button>
+            <button class="action-btn" onclick="Bank.lock(1440, 150)">1 ДЕНЬ (x150)</button>
+        </div>
         <div id="bank-timer" style="display:none; margin:15px 0;">
             <h2 id="b-time">00:00</h2>
-            <button class="action-btn" id="b-claim" disabled onclick="Bank.claim()">CLAIM</button>
+            <button class="action-btn" id="b-claim" disabled onclick="Bank.claim()">ЗАБРАТЬ</button>
         </div>
-        <button class="action-btn" style="width:100%" onclick="UI.hide()">CLOSE</button>
+        <button class="action-btn" style="width:100%" onclick="UI.hide()">ЗАКРЫТЬ</button>
     </div>
 </div>
 
 <div id="modal-casino" class="overlay">
     <div class="modal" style="border-color:var(--pink)">
-        <h2 style="color:var(--pink)">CASINO</h2>
-        <p>CHIPS: <span id="casino-balance">0</span> W</p>
-        <div id="game-coin">
-            <div id="coin-res" style="margin:20px 0;">ORACLE SAYS...</div>
-            <input type="number" id="coin-bet" placeholder="BET">
-            <button class="action-btn" onclick="Casino.play('HEADS')">HEADS</button>
-            <button class="action-btn" style="color:var(--pink)" onclick="Casino.play('TAILS')">TAILS</button>
+        <h2 style="color:var(--pink)">NIGHT CITY CASINO | <span id="casino-balance">0</span> W</h2>
+        <div id="casino-main" class="grid-casino">
+            <button class="action-btn pink" onclick="Casino.open('coin')">МОНЕТКА</button>
+            <button class="action-btn pink" onclick="Casino.open('slots')">СЛОТЫ</button>
+            <button class="action-btn pink" onclick="Casino.open('crash')">КРАШ</button>
+            <button class="action-btn pink" onclick="Casino.open('mines')">МИНЫ</button>
         </div>
-        <button class="action-btn" style="width:100%; margin-top:10px" onclick="UI.hide()">EXIT</button>
+        <div id="game-coin" style="display:none;">
+            <div id="coin-res" style="margin:10px;">ОРЕЛ ИЛИ РЕШКА?</div>
+            <input type="number" id="coin-bet" placeholder="СТАВКА">
+            <button class="action-btn" onclick="Casino.playCoin('HEADS')">ОРЕЛ</button>
+            <button class="action-btn" onclick="Casino.playCoin('TAILS')">РЕШКА</button>
+        </div>
+        <div id="game-slots" style="display:none;">
+            <div id="slot-res" style="font-size:40px; margin:10px;">[ ? ? ? ]</div>
+            <input type="number" id="slot-bet" placeholder="СТАВКА">
+            <button class="action-btn pink" onclick="Casino.playSlots()">КРУТИТЬ</button>
+        </div>
+        <div id="game-crash" style="display:none;">
+            <div id="crash-mult" style="font-size:40px; color:var(--pink)">1.00x</div>
+            <input type="number" id="crash-bet" placeholder="СТАВКА">
+            <button class="action-btn pink" id="crash-start" onclick="Casino.startCrash()">СТАРТ</button>
+            <button class="action-btn" id="crash-stop" style="display:none" onclick="Casino.stopCrash()">ЗАБРАТЬ</button>
+        </div>
+        <div id="game-mines" style="display:none;">
+            <div id="mines-grid" style="display:grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 10px auto; width: 250px;"></div>
+            <input type="number" id="mines-bet" placeholder="СТАВКА">
+            <button class="action-btn pink" id="mines-start" onclick="Casino.startMines()">ИГРАТЬ</button>
+            <button class="action-btn" id="mines-cashout" style="display:none" onclick="Casino.stopMines()">ЗАБРАТЬ</button>
+        </div>
+        <button class="action-btn" style="width:100%; margin-top:15px" onclick="Casino.back()">НАЗАД / ВЫХОД</button>
     </div>
 </div>
 
 <div id="modal-reset" class="overlay">
     <div class="modal" style="border-color:var(--danger)">
-        <h2 style="color:var(--danger)">PRESTIGE</h2>
-        <p>1B WOOL = +1% BONUS</p>
-        <button class="action-btn" style="width:100%" onclick="alert('NOT ENOUGH WOOL')">BURN PROGRESS</button>
-        <button class="action-btn" style="width:100%" onclick="UI.hide()">ABORT</button>
+        <h2 style="color:var(--danger)">ПРЕСТИЖ</h2>
+        <p>1 МЛРД ШЕРСТИ = +1% К БОНУСУ</p>
+        <button class="action-btn" style="width:100%" onclick="alert('НЕДОСТАТОЧНО ШЕРСТИ')">СБРОСИТЬ ВСЁ</button>
+        <button class="action-btn" style="width:100%" onclick="UI.hide()">ОТМЕНА</button>
     </div>
 </div>
 
 <script>
 const Core = {
     save: { wool: 0, click: 1, auto: 0, prestige: 1, inv: {}, skin: "🦙", bank: { active: false, end: 0, val: 0 } },
-    db: {
-        click: [],
-        auto: [],
-        design: []
-    },
+    db: { click: [], auto: [], design: [] },
     
     generateDB() {
-        const icons = ["🦾","⚡","🔥","💉","🧬","🔮","💎","🧿","📡","🛸","🪐","💥","🐲","👑","💫","🌑","☀️","☢️","☣️","⚡","🛰️","🔋","🔌","💻","🖱️","🕹️","🗡️","🏹","🛡️","☄️"];
-        const animals = ["🐑","🐐","🐎","🐕","🐈","🦁","🐯","🦒","🐘","🦊","🐻","🐼","🐨","🦦","🐉","🦄","🦖","🐙","🦈","👽","🤖","👻","🧛","🧚","🧞","🧙","🧑‍🚀","👹","🌑","🌌"];
-        
+        const skins = ["🐑","🐕","🐈","🦁","🦊","🐻","🐼","🐨","🦦","🐉","🦄","🦖","🐙","🦈","👽","🤖","👻","🧛","🧚","🧞","🧙","🧑‍🚀","👹","🌑","🌌","🔥","💎","☄️","🪐","🧿"];
         for(let i=1; i<=30; i++) {
-            this.db.click.push({ id: `c${i}`, n: `Power Module v${i}`, p: Math.floor(10 * Math.pow(1.8, i)), v: Math.floor(2 * Math.pow(1.6, i)) });
-            this.db.auto.push({ id: `a${i}`, n: `Neural Bot v${i}`, p: Math.floor(50 * Math.pow(1.9, i)), v: Math.floor(5 * Math.pow(1.7, i)) });
-            this.db.design.push({ id: `d${i}`, n: `Skin: ${animals[i-1]}`, p: Math.floor(100 * Math.pow(2.1, i)), icon: animals[i-1] });
+            this.db.click.push({ id: `c${i}`, n: `Модуль Силы v${i}`, p: Math.floor(20 * Math.pow(1.8, i)), v: Math.floor(3 * Math.pow(1.6, i)) });
+            this.db.auto.push({ id: `a${i}`, n: `Бот-Сборщик v${i}`, p: Math.floor(100 * Math.pow(1.9, i)), v: Math.floor(8 * Math.pow(1.7, i)) });
+            this.db.design.push({ id: `d${i}`, n: `Скин: ${skins[i-1]}`, p: Math.floor(500 * Math.pow(2.1, i)), icon: skins[i-1] });
         }
     },
 
     init() {
         this.generateDB();
-        const local = localStorage.getItem('cyber_llama_ultra');
-        if(local) this.save = JSON.parse(local);
-        document.getElementById('llama-btn').onclick = () => this.doClick();
+        const saved = localStorage.getItem('llama_ultimate');
+        if(saved) this.save = JSON.parse(saved);
+        document.getElementById('llama-btn').onclick = (e) => this.doClick(e);
         setInterval(() => this.tick(), 1000);
         this.render(); this.update();
     },
 
-    doClick() {
-        this.save.wool += this.save.click * this.save.prestige;
+    doClick(e) {
+        const gain = Math.floor(this.save.click * this.save.prestige);
+        this.save.wool += gain;
+        this.spawnNote(e, `+${gain}`);
         this.update();
+    },
+
+    spawnNote(e, txt) {
+        const note = document.createElement('div');
+        note.className = 'click-note';
+        note.innerText = txt;
+        note.style.left = (e.pageX - 20) + 'px';
+        note.style.top = (e.pageY - 20) + 'px';
+        document.body.appendChild(note);
+        setTimeout(() => note.remove(), 800);
     },
 
     tick() {
         this.save.wool += this.save.auto * this.save.prestige;
-        if(this.save.bank.active && Date.now() >= this.save.bank.end) {
-            document.getElementById('b-claim').disabled = false;
-            document.getElementById('b-time').innerText = "READY";
-        } else if (this.save.bank.active) {
-            let s = Math.floor((this.save.bank.end - Date.now())/1000);
-            document.getElementById('b-time').innerText = `00:${s<10?'0':''}${s}`;
+        if(this.save.bank.active) {
+            const d = this.save.bank.end - Date.now();
+            if(d <= 0) {
+                document.getElementById('b-claim').disabled = false;
+                document.getElementById('b-time').innerText = "ГОТОВО";
+            } else {
+                let h = Math.floor(d/3600000), m = Math.floor((d%3600000)/60000), s = Math.floor((d%60000)/1000);
+                document.getElementById('b-time').innerText = `${h}:${m<10?'0':''}${m}:${s<10?'0':''}${s}`;
+            }
         }
-        this.update(); this.saveData();
+        this.update();
+        localStorage.setItem('llama_ultimate', JSON.stringify(this.save));
     },
 
     update() {
@@ -148,10 +182,7 @@ const Core = {
         document.getElementById('llama-btn').innerText = this.save.skin;
         document.getElementById('bank-balance').innerText = Math.floor(this.save.wool).toLocaleString();
         document.getElementById('casino-balance').innerText = Math.floor(this.save.wool).toLocaleString();
-        
-        document.querySelectorAll('.upgrade-card').forEach(card => {
-            card.classList.toggle('disabled', this.save.wool < card.dataset.cost);
-        });
+        document.querySelectorAll('.upgrade-card').forEach(c => c.classList.toggle('disabled', this.save.wool < c.dataset.cost));
     },
 
     render() {
@@ -159,15 +190,13 @@ const Core = {
             const el = document.getElementById(box); el.innerHTML = '';
             this.db[cat].forEach(item => {
                 const count = this.save.inv[item.id] || 0;
-                const cost = Math.floor(item.p * Math.pow(1.2, count));
+                const cost = Math.floor(item.p * Math.pow(1.3, count));
                 const div = document.createElement('div');
-                div.className = 'upgrade-card';
-                div.dataset.cost = cost;
+                div.className = 'upgrade-card'; div.dataset.cost = cost;
                 div.innerHTML = `<div class="card-header"><span>${item.n} ${count>0?`[${count}]`:''}</span><span style="color:var(--yellow)">${cost.toLocaleString()}</span></div>`;
                 div.onclick = () => {
                     if(this.save.wool >= cost) {
-                        this.save.wool -= cost;
-                        this.save.inv[item.id] = count + 1;
+                        this.save.wool -= cost; this.save.inv[item.id] = count + 1;
                         if(cat === 'click') this.save.click += item.v;
                         if(cat === 'auto') this.save.auto += item.v;
                         if(cat === 'design') this.save.skin = item.icon;
@@ -178,8 +207,7 @@ const Core = {
             });
         };
         build('click', 'list-click'); build('auto', 'list-auto'); build('design', 'list-design');
-    },
-    saveData() { localStorage.setItem('cyber_llama_ultra', JSON.stringify(this.save)); }
+    }
 };
 
 const UI = {
@@ -188,29 +216,117 @@ const UI = {
 };
 
 const Bank = {
-    lock(mins, mult) {
+    lock(m, mult) {
         const val = parseInt(document.getElementById('bank-deposit').value);
-        if(val > Core.save.wool || val <= 0) return;
+        if(val > Core.save.wool || val <= 0) return alert("НЕТ СРЕДСТВ");
         Core.save.wool -= val;
-        Core.save.bank = { active: true, end: Date.now() + (mins*60000), val: Math.floor(val * mult) };
+        Core.save.bank = { active: true, end: Date.now() + (m * 60000), val: Math.floor(val * mult) };
         document.getElementById('bank-timer').style.display = 'block';
     },
     claim() {
-        Core.save.wool += Core.save.bank.val;
-        Core.save.bank.active = false;
+        Core.save.wool += Core.save.bank.val; Core.save.bank.active = false;
         document.getElementById('bank-timer').style.display = 'none';
-        UI.hide();
     }
 };
 
 const Casino = {
-    play(side) {
+    open(g) { document.getElementById('casino-main').style.display = 'none'; document.getElementById('game-'+g).style.display = 'block'; },
+    back() { 
+        if(this.crashInterval || this.minesActive) return alert("СНАЧАЛА ЗАКОНЧИТЕ ИГРУ");
+        document.querySelectorAll('[id^="game-"]').forEach(e => e.style.display = 'none');
+        document.getElementById('casino-main').style.display = 'grid'; 
+        UI.hide();
+    },
+    playCoin(side) {
         const bet = parseInt(document.getElementById('coin-bet').value);
         if(bet > Core.save.wool || bet <= 0) return;
         Core.save.wool -= bet;
         const res = Math.random() > 0.5 ? 'HEADS' : 'TAILS';
-        document.getElementById('coin-res').innerText = "RESULT: " + res;
+        document.getElementById('coin-res').innerText = "РЕЗУЛЬТАТ: " + (res === 'HEADS' ? "ОРЕЛ" : "РЕШКА");
         if(side === res) Core.save.wool += bet * 2;
+        Core.update();
+    },
+    playSlots() {
+        const bet = parseInt(document.getElementById('slot-bet').value);
+        if(bet > Core.save.wool || bet <= 0) return;
+        Core.save.wool -= bet;
+        const s = ['🍒','💎','7️⃣','🔥'];
+        const r = [s[Math.floor(Math.random()*4)], s[Math.floor(Math.random()*4)], s[Math.floor(Math.random()*4)]];
+        document.getElementById('slot-res').innerText = `[ ${r[0]} ${r[1]} ${r[2]} ]`;
+        if(r[0] === r[1] && r[1] === r[2]) Core.save.wool += bet * 20;
+        else if(r[0] === r[1] || r[1] === r[2]) Core.save.wool += bet * 3;
+        Core.update();
+    },
+    crashMult: 1, crashInterval: null,
+    startCrash() {
+        const bet = parseInt(document.getElementById('crash-bet').value);
+        if(bet > Core.save.wool || bet <= 0) return;
+        Core.save.wool -= bet;
+        this.crashMult = 1;
+        document.getElementById('crash-start').style.display = 'none';
+        document.getElementById('crash-stop').style.display = 'inline-block';
+        const crashAt = Math.random() * 5 + 1;
+        this.crashInterval = setInterval(() => {
+            this.crashMult += 0.05;
+            document.getElementById('crash-mult').innerText = this.crashMult.toFixed(2) + 'x';
+            if(this.crashMult >= crashAt) {
+                clearInterval(this.crashInterval);
+                this.crashInterval = null;
+                document.getElementById('crash-mult').innerText = "BOOM!";
+                document.getElementById('crash-start').style.display = 'inline-block';
+                document.getElementById('crash-stop').style.display = 'none';
+            }
+        }, 100);
+    },
+    stopCrash() {
+        if(!this.crashInterval) return;
+        clearInterval(this.crashInterval);
+        this.crashInterval = null;
+        const bet = parseInt(document.getElementById('crash-bet').value);
+        Core.save.wool += Math.floor(bet * this.crashMult);
+        document.getElementById('crash-start').style.display = 'inline-block';
+        document.getElementById('crash-stop').style.display = 'none';
+        Core.update();
+    },
+    mines: [], minesActive: false,
+    startMines() {
+        const bet = parseInt(document.getElementById('mines-bet').value);
+        if(bet > Core.save.wool || bet <= 0) return;
+        Core.save.wool -= bet;
+        this.minesActive = true;
+        this.mines = Array(25).fill(false);
+        for(let i=0; i<5; i++) {
+            let pos = Math.floor(Math.random()*25);
+            while(this.mines[pos]) pos = Math.floor(Math.random()*25);
+            this.mines[pos] = true;
+        }
+        const grid = document.getElementById('mines-grid'); grid.innerHTML = '';
+        for(let i=0; i<25; i++) {
+            const b = document.createElement('button');
+            b.style.height = '40px'; b.style.background = '#222'; b.style.border = '1px solid var(--cyan)';
+            b.onclick = () => {
+                if(!this.minesActive) return;
+                if(this.mines[i]) {
+                    b.innerText = '💣'; b.style.background = 'red';
+                    this.minesActive = false;
+                    document.getElementById('mines-start').style.display = 'inline-block';
+                    document.getElementById('mines-cashout').style.display = 'none';
+                } else {
+                    b.innerText = '💎'; b.style.background = 'green'; b.disabled = true;
+                }
+            };
+            grid.appendChild(b);
+        }
+        document.getElementById('mines-start').style.display = 'none';
+        document.getElementById('mines-cashout').style.display = 'inline-block';
+    },
+    stopMines() {
+        if(!this.minesActive) return;
+        this.minesActive = false;
+        const bet = parseInt(document.getElementById('mines-bet').value);
+        Core.save.wool += bet * 2;
+        document.getElementById('mines-start').style.display = 'inline-block';
+        document.getElementById('mines-cashout').style.display = 'none';
         Core.update();
     }
 };
