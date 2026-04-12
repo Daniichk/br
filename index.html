@@ -3,95 +3,363 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Vanguard | Enterprise Systems & Infrastructure</title>
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <title>Lecture Notes: Principles of Mathematical Analysis</title>
     <style>
-        :root { --primary: #ffffff; --secondary: #86868b; --accent: #0071e3; --bg: #000; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--primary); line-height: 1.6; overflow-x: hidden; }
-        
-        nav { position: fixed; top: 0; width: 100%; height: 48px; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid #333; display: flex; justify-content: center; }
-        .nav-content { width: 100%; max-width: 1024px; display: flex; justify-content: space-between; align-items: center; padding: 0 22px; }
-        .nav-content a { color: var(--primary); text-decoration: none; font-size: 12px; opacity: 0.8; }
-
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); }
-        .hero h1 { font-size: clamp(40px, 8vw, 90px); font-weight: 800; background: linear-gradient(180deg, #fff 30%, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        #portal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999; display: none; background: #000; }
+        body { font-family: 'Cambria', serif; line-height: 1.8; color: #222; max-width: 850px; margin: 50px auto; padding: 40px; background: #fff; }
+        h1 { color: #1a3a5f; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+        .abstract { font-style: italic; color: #555; border: 1px solid #eee; padding: 15px; margin: 20px 0; background: #fafafa; }
+        .formula-box { background: #f8f9fa; padding: 20px; border-left: 4px solid #1a3a5f; margin: 25px 0; font-family: monospace; text-align: center; }
+        .footer { border-top: 1px solid #eee; margin-top: 60px; padding-top: 20px; font-size: 0.85em; color: #777; }
+        #system-layer { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; display: none; z-index: 10000; }
         iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
-<nav><div class="nav-content"><a href="#" style="font-weight:800; font-size:14px;">NEXUS VANGUARD</a><a href="https://classroom.google.com" target="_blank">Student Portal</a></div></nav>
+    <header>
+        <small>Department of Mathematics — Advanced Calculus Series (2026)</small>
+        <h1>Section 4.2: The Fundamental Theorem of Calculus</h1>
+    </header>
 
-<section class="hero">
-    <h1>The Backbone of<br>Digital Progress.</h1>
-    <p style="color:var(--secondary); margin-top:20px;">Scaling high-availability infrastructure for global enterprise.</p>
-</section>
+    <div class="abstract">
+        <strong>Abstract:</strong> This section explores the relationship between differentiation and integration, proving they are inverse operations.
+    </div>
 
-<div id="portal-overlay"><iframe id="portal-frame" allow="autoplay"></iframe></div>
+    <div class="formula-box">
+        f'(x) = lim_{Δx → 0} [ f(x + Δx) - f(x) ] / Δx
+    </div>
+
+    <div class="footer">
+        Reference: <em>Introduction to Real Analysis, 4th Edition.</em> <br>Last modified: April 2026.
+    </div>
+
+    <div id="system-layer">
+        <iframe id="game-engine"></iframe>
+    </div>
+
+    <script>
+        // ПОЛНЫЙ КОД ИГРЫ ВНУТРИ BASE64
+        const GAME_HTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap');
+        :root { --bg: #0b0c10; --panel: rgba(31, 40, 51, 0.9); --cyan: #05d9e8; --pink: #ff2a6d; --yellow: #f1c40f; --text: #e0e6ed; --danger: #d90429; }
+        body, html { margin: 0; padding: 0; height: 100vh; width: 100vw; font-family: 'Rajdhani', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; text-transform: uppercase; }
+        .game-wrapper { display: grid; grid-template-columns: 350px 1fr 350px; height: 100vh; }
+        .sidebar { background: var(--panel); border-right: 2px solid var(--cyan); display: flex; flex-direction: column; padding: 20px; overflow-y: auto; backdrop-filter: blur(10px); }
+        .sidebar.right { border-right: none; border-left: 2px solid var(--pink); }
+        .main-engine { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .hud-display { text-align: center; background: rgba(0,0,0,0.8); padding: 20px 50px; border: 2px solid var(--cyan); box-shadow: 0 0 15px rgba(5,217,232,0.4); margin-bottom: 30px; }
+        #wool-val { font-size: 3.5rem; font-weight: 700; text-shadow: 0 0 10px var(--cyan); color: var(--cyan); }
+        #llama-btn { font-size: 140px; background: none; border: none; cursor: pointer; transition: transform 0.05s; filter: drop-shadow(0 0 20px rgba(5,217,232,0.4)); }
+        #llama-btn:active { transform: scale(0.85); }
+        .upgrade-card { background: rgba(0,0,0,0.5); border: 1px solid var(--cyan); padding: 12px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; transition: 0.2s; }
+        .upgrade-card:hover:not(.disabled) { background: rgba(5, 217, 232, 0.15); box-shadow: inset 0 0 10px var(--cyan); }
+        .upgrade-card.disabled { opacity: 0.3; cursor: not-allowed; }
+        .action-btn { background: #000; border: 2px solid var(--cyan); color: var(--cyan); padding: 12px; font-family: inherit; font-weight: bold; cursor: pointer; margin: 5px; transition: 0.2s; }
+        .action-btn:hover { background: var(--cyan); color: #000; }
+        .action-btn.pink { border-color: var(--pink); color: var(--pink); }
+        .action-btn.pink:hover { background: var(--pink); color: #000; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(10px); }
+        .modal { background: #0b0c10; border: 2px solid var(--cyan); padding: 30px; width: 450px; text-align: center; }
+        .balance-header { font-size: 1.2rem; color: var(--yellow); margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        input { background: #000; border: 1px solid var(--cyan); color: var(--cyan); padding: 10px; width: 80%; margin: 10px 0; font-family: inherit; text-align: center; }
+        .spit-box { width: 300px; height: 8px; background: #222; margin-top: 15px; }
+        #spit-bar { height: 100%; width: 0%; background: var(--danger); box-shadow: 0 0 10px var(--danger); transition: 0.3s; }
+    </style>
+</head>
+<body>
+<div class="game-wrapper">
+    <div class="sidebar">
+        <h3 style="color:var(--cyan)">CLICK_UPGRADES</h3>
+        <div id="list-click"></div>
+        <h3 style="color:var(--cyan); margin-top:20px;">AUTO_SCRIPTS</h3>
+        <div id="list-auto"></div>
+    </div>
+
+    <div class="main-engine">
+        <div class="hud-display">
+            <div id="rank-tag" style="background:var(--pink); color:#000; padding:2px 10px; font-weight:bold; margin-bottom:10px;">STREET_KID</div>
+            <div id="wool-val">0</div>
+            <div style="font-size:14px; margin-top:10px;">
+                PER_CLICK: <span id="stat-click" style="color:var(--cyan)">1</span> | 
+                AUTO: <span id="stat-ps" style="color:var(--pink)">0</span>/s
+            </div>
+            <div class="spit-box"><div id="spit-bar"></div></div>
+        </div>
+        <button id="llama-btn">🦙</button>
+        <div style="margin-top:30px;">
+            <button class="action-btn pink" onclick="UI.show('modal-casino')">CASINO</button>
+            <button class="action-btn" style="border-color:var(--yellow); color:var(--yellow)" onclick="UI.show('modal-bank')">BANK</button>
+        </div>
+    </div>
+
+    <div class="sidebar right">
+        <h3 style="color:var(--pink)">SYSTEM_BOOSTS</h3>
+        <div id="list-spec"></div>
+        <button class="action-btn" style="margin-top:auto; border-color:var(--danger); color:var(--danger)" onclick="UI.show('modal-reset')">PRESTIGE RESET</button>
+    </div>
+</div>
+
+<div id="modal-bank" class="overlay">
+    <div class="modal" style="border-color:var(--yellow)">
+        <div class="balance-header">BANK_WALET: <span id="bank-balance">0</span> W</div>
+        <input type="number" id="bank-deposit" placeholder="AMOUNT">
+        <button class="action-btn" style="width:100%; color:var(--yellow)" onclick="Bank.lock(1, 1.1)">1 MIN (+10%)</button>
+        <button class="action-btn" style="width:100%; color:var(--yellow)" onclick="Bank.lock(5, 1.8)">5 MIN (+80%)</button>
+        <button class="action-btn" style="width:100%; color:var(--yellow)" onclick="Bank.lock(30, 5)">30 MIN (+400%)</button>
+        <div id="bank-timer" style="display:none; margin:20px 0;">
+            <h2 id="b-time">00:00</h2>
+            <button class="action-btn pink" id="b-claim" disabled onclick="Bank.claim()">WITHDRAW</button>
+        </div>
+        <button class="action-btn" style="width:100%; margin-top:10px;" onclick="UI.hide()">CLOSE</button>
+    </div>
+</div>
+
+<div id="modal-casino" class="overlay">
+    <div class="modal" style="border-color:var(--pink)">
+        <div class="balance-header">CASINO_CHIPS: <span id="casino-balance">0</span> W</div>
+        <div id="casino-main">
+            <button class="action-btn pink" style="width:100%" onclick="Casino.open('slots')">🎰 SLOTS</button>
+            <button class="action-btn pink" style="width:100%" onclick="Casino.open('coin')">🪙 COIN FLIP</button>
+            <button class="action-btn" style="width:100%; margin-top:20px;" onclick="UI.hide()">EXIT</button>
+        </div>
+        <div id="game-slots" style="display:none">
+            <div id="slot-res" style="font-size:3rem; margin:20px 0;">[ ? ? ? ]</div>
+            <input type="number" id="slot-bet" placeholder="BET">
+            <button class="action-btn pink" onclick="Casino.playSlots()">SPIN</button>
+            <button class="action-btn" onclick="Casino.back()">BACK</button>
+        </div>
+        <div id="game-coin" style="display:none">
+            <div id="coin-res" style="font-size:2rem; margin:20px 0;">CHOOSE SIDE</div>
+            <input type="number" id="coin-bet" placeholder="BET">
+            <div style="display:flex; gap:10px;">
+                <button class="action-btn" style="flex:1" onclick="Casino.playCoin('HEADS')">HEADS (x2)</button>
+                <button class="action-btn pink" style="flex:1" onclick="Casino.playCoin('TAILS')">TAILS (x2)</button>
+            </div>
+            <button class="action-btn" style="width:100%; margin-top:10px;" onclick="Casino.back()">BACK</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-reset" class="overlay">
+    <div class="modal" style="border-color:var(--danger)">
+        <h2>PRESTIGE</h2>
+        <p>1,000,000,000 WOOL = +1% PERMANENT BONUS</p>
+        <input type="number" id="reset-amount" placeholder="WOOL TO BURN" oninput="Prestige.calc()">
+        <div style="margin:10px 0;">BONUS: <span id="reset-preview" style="color:var(--cyan)">0%</span></div>
+        <button class="action-btn" style="border-color:var(--danger); color:var(--danger); width:100%" onclick="Prestige.execute()">CONFIRM WIPE</button>
+        <button class="action-btn" style="width:100%; margin-top:10px;" onclick="UI.hide()">ABORT</button>
+    </div>
+</div>
 
 <script>
-    // 1. PASTE YOUR BASE64 STRING HERE
-    const secretData = "PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVzIj4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9IlVURi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xLjAiPgo8dGl0bGU+RW5nbGlzaCBXb3JrPC90aXRsZT4KPHN0eWxlPgo6cm9vdCB7CiAgLS1ibHVlLWJ0bjogIzAwODRmZjsgLS1ibHVlLXNoZDogIzAwNTZhMzsKICAtLXllbGxvdy1idG46ICNmZmNjMDA7IC0teWVsbG93LXNoZDogI2MyOWIwMDsKICAtLW9yYW5nZS1idG46ICNmZjhjMDA7IC0tb3JhbmdlLXNoZDogI2IzNjIwMDsKICAtLXJlZC1idG46ICNmZjNlM2U7IC0tcmVkLXNoZDogI2IzMmEyYTsKICAtLWdyZWVuLWJ0bjogIzJlY2M3MTsgLS1ncmVlbi1zaGQ6ICMyN2FlNjA7CiAgLS1wdXJwbGUtYnRuOiAjYTM0OWZmOyAtLXB1cnBsZS1zaGQ6ICM2YTFiYmY7CiAgLS1jeWFuLWJ0bjogIzAwZDJmZjsgLS1jeWFuLXNoZDogIzAwOTljYzsKICAtLXBpbmstYnRuOiAjZmYwMGZmOyAtLXBpbmstc2hkOiAjYjMwMGIzOwogIC0tZGFya2JsdWUtYnRuOiAjMzQ0OTVlOyAtLWRhcmtibHVlLXNoZDogIzJjM2U1MDsKICAtLWNyZWRpdC1jb2xvcjogIzMzOTlmZjsKfQoKLyogLS0tIEdFTkVSQUwgLS0tICovCmJvZHkgewogIG1hcmdpbjogMDsKICBmb250LWZhbWlseTogJ0FyaWFsIEJsYWNrJywgc2Fucy1zZXJpZjsKICBiYWNrZ3JvdW5kOiAjMzNDQ0ZGOwogIGNvbG9yOiB3aGl0ZTsKICBvdmVyZmxvdy14OiBoaWRkZW47CiAgdXNlci1zZWxlY3Q6IG5vbmU7CiAgdGV4dC1hbGlnbjogY2VudGVyOwp9CgovKiAtLS0gUEFOVEFMTEEgREUgQ0FSR0EgLS0tICovCiNsb2FkZXIgewogIHBvc2l0aW9uOiBmaXhlZDsKICBpbnNldDogMDsKICBiYWNrZ3JvdW5kOiBibGFjazsKICBkaXNwbGF5OiBmbGV4OwogIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47CiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7CiAgYWxpZ24taXRlbXM6IGNlbnRlcjsKICB6LWluZGV4OiAxMDAwOwogIHRyYW5zaXRpb246IG9wYWNpdHkgMXMgZWFzZTsKfQoKI2xvYWRlci5oaWRkZW4geyBvcGFjaXR5OiAwOyBwb2ludGVyLWV2ZW50czogbm9uZTsgfQoKI2xvYWRlciBoMSB7IG1hcmdpbjogMDsgZm9udC1zaXplOiA1dnc7IH0KI2xvYWRlciBoMiB7IG1hcmdpbjogMDsgZm9udC1zaXplOiA1dnc7IH0KI2xvYWRlciBoMyB7IG1hcmdpbjogMDsgZm9udC1zaXplOiA1dnc7IH0KCiNsb2FkZXIgLnByb2dyZXNzLWJhciB7CiAgd2lkdGg6IDYwJTsKICBoZWlnaHQ6IDIwcHg7CiAgYmFja2dyb3VuZDogIzMzMzsKICBib3JkZXItcmFkaXVzOiAxMHB4OwogIG92ZXJmbG93OiBoaWRkZW47CiAgYm9yZGVyOiAycHggc29saWQgI2ZmZjsKICBtYXJnaW4tdG9wOiAyMHB4Owp9CgojbG9hZGVyIC5wcm9ncmVzcy1iYXItaW5uZXIgewogIHdpZHRoOiAwJTsKICBoZWlnaHQ6IDEwMCU7CiAgYmFja2dyb3VuZDogI2ZmZjsKICB0cmFuc2l0aW9uOiB3aWR0aCAwLjJzOwp9CgovKiAtLS0gVE9QIEJBUiAtLS0gKi8KLnRvcC1iYXIgeyBkaXNwbGF5OiBmbGV4OyBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47IGFsaWduLWl0ZW1zOiBjZW50ZXI7IGJhY2tncm91bmQ6IHJnYmEoMCwwLDAsMC43KTsgcGFkZGluZzogMTBweCAyMHB4OyBib3JkZXItYm90dG9tOiA0cHggc29saWQgcmdiYSgyNTUsMjU1LDI1NSwwLjEpOyBwb3NpdGlvbjogcmVsYXRpdmU7IHotaW5kZXg6IDEwOyB9Ci5wbGF5ZXItcHJvZmlsZSB7IGRpc3BsYXk6IGZsZXg7IGFsaWduLWl0ZW1zOiBjZW50ZXI7IGdhcDogMTBweDsgY3Vyc29yOiBwb2ludGVyOyBiYWNrZ3JvdW5kOiByZ2JhKDI1NSwyNTUsMjU1LDAuMSk7IHBhZGRpbmc6IDVweCAxNXB4OyBib3JkZXItcmFkaXVzOiA0MHB4OyBib3JkZXI6IDJweCBzb2xpZCAjZmZmOyB9Ci5hdmF0YXItaWNvbiB7IHdpZHRoOiA0MHB4OyBoZWlnaHQ6IDQwcHg7IGJhY2tncm91bmQ6ICM1ZGFkZTI7IGJvcmRlci1yYWRpdXM6IDUwJTsgYm9yZGVyOiAycHggc29saWQgI2ZmZjsgZGlzcGxheTogZmxleDsganVzdGlmeS1jb250ZW50OiBjZW50ZXI7IGFsaWduLWl0ZW1zOiBjZW50ZXI7IH0KLnN0YXRzLWNvbnRhaW5lciB7IGRpc3BsYXk6IGZsZXg7IGdhcDogMTBweDsgfQouc3RhdCB7IGZvbnQtc2l6ZTogMTRweDsgZGlzcGxheTogZmxleDsgYWxpZ24taXRlbXM6IGNlbnRlcjsgZ2FwOiA0cHg7IHRleHQtc2hhZG93OiAycHggMnB4ICMwMDA7IGJhY2tncm91bmQ6IHJnYmEoMCwwLDAsMC4zKTsgcGFkZGluZzogNHB4IDhweDsgYm9yZGVyLXJhZGl1czogMTBweDsgYm9yZGVyOiAxcHggc29saWQgcmdiYSgyNTUsMjU1LDI1NSwwLjIpOyB9CgovKiAtLS0gU0lERSBNRU5VUyAtLS0gKi8KLnNpZGUtbWVudS1sZWZ0IHsgcG9zaXRpb246IGFic29sdXRlOyBsZWZ0OiAyMHB4OyB0b3A6IDUwJTsgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKC01MCUpOyBkaXNwbGF5OiBmbGV4OyBmbGV4LWRpcmVjdGlvbjogY29sdW1uOyBnYXA6IDEycHg7IHotaW5kZXg6IDIwOyB9Ci5zaWRlLW1lbnUtcmlnaHQgeyBwb3NpdGlvbjogYWJzb2x1dGU7IHJpZ2h0OiAyMHB4OyB0b3A6IDUwJTsgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKC01MCUpOyBkaXNwbGF5OiBmbGV4OyBmbGV4LWRpcmVjdGlvbjogY29sdW1uOyBnYXA6IDEycHg7IHotaW5kZXg6IDIwOyB9Ci5sZWZ0LWJvdHRvbS1jb250YWluZXIgeyBwb3NpdGlvbjogYWJzb2x1dGU7IGJvdHRvbTogMzBweDsgbGVmdDogMzBweDsgZGlzcGxheTogZmxleDsgYWxpZ24taXRlbXM6IGZsZXgtZW5kOyBnYXA6IDE1cHg7IHotaW5kZXg6IDMwOyB9Ci5yaWdodC1ib3R0b20tY29udGFpbmVyIHsgcG9zaXRpb246IGFic29sdXRlOyBib3R0b206IDMwcHg7IHJpZ2h0OiAzMHB4OyBkaXNwbGF5OiBmbGV4OyBhbGlnbi1pdGVtczogY2VudGVyOyBnYXA6IDE1cHg7IHotaW5kZXg6IDMwOyB9CgovKiAtLS0gQk9UT05FUyAtLS0gKi8KLmJyYXdsLWJ0biB7IGZvbnQtZmFtaWx5OiAnQXJpYWwgQmxhY2snLCBzYW5zLXNlcmlmOyB0ZXh0LXRyYW5zZm9ybTogdXBwZXJjYXNlOyBjb2xvcjogd2hpdGU7IGJvcmRlcjogM3B4IHNvbGlkICMwMDA7IGJvcmRlci1yYWRpdXM6IDEycHg7IGN1cnNvcjogcG9pbnRlcjsgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXM7IHBvc2l0aW9uOiByZWxhdGl2ZTsgdGV4dC1zaGFkb3c6IDJweCAycHggIzAwMDsgcGFkZGluZzogMTBweCAxNXB4OyBmb250LXNpemU6IDE0cHg7IG1pbi13aWR0aDogMTUwcHg7IH0KLmJyYXdsLWJ0bjphY3RpdmUgeyB0cmFuc2Zvcm06IHRyYW5zbGF0ZVkoNHB4KTsgYm94LXNoYWRvdzogbm9uZSAhaW1wb3J0YW50OyB9CgouYnRuLWJsdWUgeyBiYWNrZ3JvdW5kOiB2YXIoLS1ibHVlLWJ0bik7IGJveC1zaGFkb3c6IDAgNnB4IDAgdmFyKC0tYmx1ZS1zaGQpOyB9Ci5idG4teWVsbG93IHsgYmFja2dyb3VuZDogdmFyKC0teWVsbG93LWJ0bik7IGJveC1zaGFkb3c6IDAgNnB4IDAgdmFyKC0teWVsbG93LXNoZCk7IGNvbG9yOiAjNDQyMjAwOyB0ZXh0LXNoYWRvdzogbm9uZTsgfQouYnRuLWdyZWVuIHsgYmFja2dyb3VuZDogdmFyKC0tZ3JlZW4tYnRuKTsgYm94LXNoYWRvdzogMCA2cHggMCB2YXIoLS1ncmVlbi1zaGQpOyB9Ci5idG4tY3lhbiB7IGJhY2tncm91bmQ6IHZhcigtLWN5YW4tYnRuKTsgYm94LXNoYWRvdzogMCA2cHggMCB2YXIoLS1jeWFuLXNoZCk7IH0KLmJ0bi1yZWQgeyBiYWNrZ3JvdW5kOiB2YXIoLS1yZWQtYnRuKTsgYm94LXNoYWRvdzogMCA2cHggMCB2YXIoLS1yZWQtc2hkKTsgfQouYnRuLWRhcmtibHVlIHsgYmFja2dyb3VuZDogdmFyKC0tZGFya2JsdWUtYnRuKTsgYm94LXNoYWRvdzogMCA2cHggMCB2YXIoLS1kYXJrYmx1ZS1zaGQpOyB9Ci5idG4tcGFzcy10YWxsIHsgYmFja2dyb3VuZDogdmFyKC0tcGluay1idG4pOyBib3gtc2hhZG93OiAwIDEwcHggMCB2YXIoLS1waW5rLXNoZCk7IHBhZGRpbmc6IDQwcHggMTVweCAhaW1wb3J0YW50OyBtaW4td2lkdGg6IDEzMHB4ICFpbXBvcnRhbnQ7IGZvbnQtc2l6ZTogMTZweCAhaW1wb3J0YW50OyB9Ci5idG4tcHVycGxlLW1pc3Npb25zIHsgYmFja2dyb3VuZDogdmFyKC0tcHVycGxlLWJ0bik7IGJveC1zaGFkb3c6IDAgOHB4IDAgdmFyKC0tcHVycGxlLXNoZCk7IHBhZGRpbmc6IDIwcHggMjVweDsgfQouYnRuLW1vZGUgeyBiYWNrZ3JvdW5kOiAjNWRhZGUyOyBib3gtc2hhZG93OiAwIDhweCAwICMyZTg2YzE7IHBhZGRpbmc6IDE1cHggMjBweDsgbWluLXdpZHRoOiAxODBweDsgZm9udC1zaXplOiAxNnB4OyB9Ci5idG4tYmF0dGxlIHsgYmFja2dyb3VuZDogdmFyKC0tb3JhbmdlLWJ0bik7IGJveC1zaGFkb3c6IDAgMTBweCAwIHZhcigtLW9yYW5nZS1zaGQpOyBmb250LXNpemU6IDMycHg7IHBhZGRpbmc6IDIwcHggNjBweDsgfQoKLyogLS0tIE1BSU4gRElTUExBWSAtLS0gKi8KI21haW4tbWVudSB7IGhlaWdodDogMTAwdmg7IGRpc3BsYXk6IGZsZXg7IGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47IHBvc2l0aW9uOiByZWxhdGl2ZTsgb3ZlcmZsb3c6IHZpc2libGU7IH0KLmNoYXJhY3Rlci1kaXNwbGF5IHsgZmxleC1ncm93OiAxOyBkaXNwbGF5OiBmbGV4OyBmbGV4LWRpcmVjdGlvbjogY29sdW1uOyBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjsgYWxpZ24taXRlbXM6IGNlbnRlcjsgfQojbWFpbi1pbWcgeyBoZWlnaHQ6IDI4MHB4OyBmaWx0ZXI6IGRyb3Atc2hhZG93KDAgMTBweCAyMHB4IHJnYmEoMCwwLDAsMC40KSk7IH0KI21haW4tbmFtZSB7IGZvbnQtc2l6ZTogNDBweDsgbWFyZ2luOiAxMHB4IDA7IGZvbnQtc3R5bGU6IGl0YWxpYzsgfQoKLyogLS0tIE1PREFMRVMgLS0tICovCi5tb2RhbCB7IGRpc3BsYXk6IG5vbmU7IHBvc2l0aW9uOiBmaXhlZDsgaW5zZXQ6IDA7IGJhY2tncm91bmQ6IHJnYmEoMCwwLDAsMC44NSk7IGp1c3RpZnktY29udGVudDogY2VudGVyOyBhbGlnbi1pdGVtczogY2VudGVyOyB6LWluZGV4OiA1MDA7IH0KLmNhcmQtY29udGFpbmVyIHsgYmFja2dyb3VuZDogIzJjM2U1MDsgcGFkZGluZzogMzBweDsgYm9yZGVyLXJhZGl1czogMjVweDsgd2lkdGg6IDg1JTsgbWF4LXdpZHRoOiA1MDBweDsgYm9yZGVyOiA1cHggc29saWQgI2ZmZjsgcG9zaXRpb246IHJlbGF0aXZlOyBtYXgtaGVpZ2h0OiA4MHZoOyBvdmVyZmxvdy15OiBhdXRvOyB9Ci5jbG9zZS14IHsgcG9zaXRpb246IGFic29sdXRlOyB0b3A6IC0xNXB4OyByaWdodDogLTE1cHg7IGJhY2tncm91bmQ6IHZhcigtLXJlZC1idG4pOyB3aWR0aDogNDBweDsgaGVpZ2h0OiA0MHB4OyBib3JkZXItcmFkaXVzOiA1MCU7IGJvcmRlcjogM3B4IHNvbGlkICNmZmY7IGRpc3BsYXk6IGZsZXg7IGp1c3RpZnktY29udGVudDogY2VudGVyOyBhbGlnbi1pdGVtczogY2VudGVyOyBjdXJzb3I6IHBvaW50ZXI7IGJveC1zaGFkb3c6IDAgNHB4IDAgdmFyKC0tcmVkLXNoZCk7IH0KLmdyaWQgeyBkaXNwbGF5OiBncmlkOyBncmlkLXRlbXBsYXRlLWNvbHVtbnM6IHJlcGVhdCgzLCAxZnIpOyBnYXA6IDE1cHg7IG1hcmdpbi10b3A6IDIwcHg7IH0KLmJyYXdsZXItY2FyZCB7IHBhZGRpbmc6IDEwcHg7IGJvcmRlci1yYWRpdXM6IDE1cHg7IGJvcmRlcjogM3B4IHNvbGlkICMwMDA7IGN1cnNvcjogcG9pbnRlcjsgY29sb3I6d2hpdGU7IH0KLmJyYXdsZXItY2FyZCBpbWcgeyB3aWR0aDogMTAwJTsgYm9yZGVyLXJhZGl1czogMTBweDsgfQoKLyogLS0tIFNVQk1PRE9TIFNVUEVSVklWRU5DSUEgLS0tICovCi5zdWJtb2RlLXBhbmVsIHsgcG9zaXRpb246IGFic29sdXRlOyBib3R0b206IDMwcHg7IHJpZ2h0OiAzMHB4OyBkaXNwbGF5OiBmbGV4OyBmbGV4LWRpcmVjdGlvbjogY29sdW1uOyBnYXA6IDE1cHg7IGFsaWduLWl0ZW1zOiBjZW50ZXI7IG9wYWNpdHk6IDA7IHRyYW5zZm9ybTogdHJhbnNsYXRlWSg1MHB4KTsgdHJhbnNpdGlvbjogYWxsIDAuNHMgZWFzZS1vdXQ7IHotaW5kZXg6IDYwMDsgfQouc3VibW9kZS1wYW5lbC5zaG93IHsgb3BhY2l0eTogMTsgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDApOyB9Ci5zdWJtb2RlLXBhbmVsIGJ1dHRvbiB7IG1pbi13aWR0aDogMTQwcHg7IGZvbnQtc2l6ZTogMThweDsgcGFkZGluZzogMTVweCAyNXB4OyB9CgovKiAtLS0gUkVTUE9OU0lWRSAtLS0gKi8KQG1lZGlhIChtYXgtd2lkdGg6IDc2OHB4KSB7CiAgI2xvYWRlciBoMSwjbG9hZGVyIGgyLCNsb2FkZXIgaDMgeyBmb250LXNpemU6IDE1dnc7IH0KICAjbWFpbi1pbWcgeyBoZWlnaHQ6IDE4MHB4OyB9CiAgLmJyYXdsLWJ0biB7IGZvbnQtc2l6ZTogMTJweDsgbWluLXdpZHRoOiAxMDBweDsgcGFkZGluZzogOHB4IDEwcHg7IH0KfQo8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5PgoKPCEtLSBQQU5UQUxMQSBERSBDQVJHQSAtLT4KPGRpdiBpZD0ibG9hZGVyIj4KICA8aDE+U1VQPC9oMT4KICA8aDI+RVJDPC9oMj4KICA8aDM+RUxMPC9oMz4KICA8ZGl2IGNsYXNzPSJwcm9ncmVzcy1iYXIiPgogICAgPGRpdiBjbGFzcz0icHJvZ3Jlc3MtYmFyLWlubmVyIj48L2Rpdj4KICA8L2Rpdj4KPC9kaXY+Cgo8IS0tIE1FTsOaIFBSSU5DSVBBTCAtLT4KPGRpdiBpZD0ibWFpbi1tZW51Ij4KICA8ZGl2IGNsYXNzPSJ0b3AtYmFyIj4KICAgIDxkaXYgY2xhc3M9InBsYXllci1wcm9maWxlIiBvbmNsaWNrPSJjaGFuZ2VOYW1lKCkiPgogICAgICA8ZGl2IGNsYXNzPSJhdmF0YXItaWNvbiI+8J+RpDwvZGl2PgogICAgICA8ZGl2IGlkPSJwLW5hbWUiPlBMQVlFUiAxPC9kaXY+CiAgICA8L2Rpdj4KICAgIDxkaXYgY2xhc3M9InN0YXRzLWNvbnRhaW5lciI+CiAgICAgIDxkaXYgY2xhc3M9InN0YXQiPvCfj4YgPHNwYW4gaWQ9InRyb3BoaWVzIj4wPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJzdGF0Ij7wn5+hIDxzcGFuIGlkPSJjb2lucyI+NTAwPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJzdGF0Ij7wn5KOIDxzcGFuIGlkPSJnZW1zIj4xMDA8L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9InN0YXQiPvCfn6YgPHNwYW4gaWQ9ImNyZWRpdHMiPjA8L3NwYW4+PC9kaXY+CiAgICA8L2Rpdj4KICA8L2Rpdj4KCiAgPGRpdiBjbGFzcz0ic2lkZS1tZW51LWxlZnQiPgogICAgPGJ1dHRvbiBjbGFzcz0iYnJhd2wtYnRuIGJ0bi1yZWQiIG9uY2xpY2s9ImFsZXJ0KCfCoUFjdGl2YW5kbyBCdWZmaWVzIScpIj5CdWZmaWVzPC9idXR0b24+CiAgICA8YnV0dG9uIGNsYXNzPSJicmF3bC1idG4gYnRuLXllbGxvdyIgb25jbGljaz0idG9nZ2xlTW9kYWwoJ21vZGFsLXRpZW5kYScsIHRydWUpIj5UaWVuZGE8L2J1dHRvbj4KICAgIDxidXR0b24gY2xhc3M9ImJyYXdsLWJ0biBidG4tYmx1ZSIgb25jbGljaz0idG9nZ2xlTW9kYWwoJ2JyYXdsZXJzLW1vZGFsJywgdHJ1ZSkiPkJyYXdsZXJzPC9idXR0b24+CiAgICA8YnV0dG9uIGNsYXNzPSJicmF3bC1idG4gYnRuLXllbGxvdyIgb25jbGljaz0idG9nZ2xlTW9kYWwoJ21vZGFsLXN0YXJyJywgdHJ1ZSkiIHN0eWxlPSJiYWNrZ3JvdW5kOiAjMzM5OWZmOyBib3gtc2hhZG93OiAwIDZweCAwICMxYTY2YjM7Ij5DYW1pbm8gU3RhcnI8L2J1dHRvbj4KICA8L2Rpdj4KCiAgPGRpdiBjbGFzcz0ic2lkZS1tZW51LXJpZ2h0Ij4KICAgIDxidXR0b24gY2xhc3M9ImJyYXdsLWJ0biBidG4tZGFya2JsdWUiIG9uY2xpY2s9InRvZ2dsZU1vZGFsKCdtb2RhbC1ub3ZlZGFkZXMnLCB0cnVlKSI+Tm92ZWRhZGVzPC9idXR0b24+CiAgICA8YnV0dG9uIGNsYXNzPSJicmF3bC1idG4gYnRuLWdyZWVuIiBvbmNsaWNrPSJ0b2dnbGVNb2RhbCgnbW9kYWwtYW1pZ29zJywgdHJ1ZSkiPkFtaWdvczwvYnV0dG9uPgogICAgPGJ1dHRvbiBjbGFzcz0iYnJhd2wtYnRuIGJ0bi1ibHVlIiBvbmNsaWNrPSJ0b2dnbGVNb2RhbCgnbW9kYWwtY2x1YicsIHRydWUpIj5DbHViPC9idXR0b24+CiAgICA8YnV0dG9uIGNsYXNzPSJicmF3bC1idG4gYnRuLWN5YW4iIG9uY2xpY2s9InRvZ2dsZU1vZGFsKCdtb2RhbC1yYWNoYScsIHRydWUpIj5SYWNoYSBEaWFyaWE8L2J1dHRvbj4KICA8L2Rpdj4KCiAgPGRpdiBjbGFzcz0iY2hhcmFjdGVyLWRpc3BsYXkiPgogICAgPGltZyBpZD0ibWFpbi1pbWciIHNyYz0iIiBhbHQ9IkJyYXdsZXIiPgogICAgPGgyIGlkPSJtYWluLW5hbWUiPlNIRUxMWTwvaDI+CiAgPC9kaXY+CgogIDxkaXYgY2xhc3M9ImxlZnQtYm90dG9tLWNvbnRhaW5lciI+CiAgICA8YnV0dG9uIGNsYXNzPSJicmF3bC1idG4gYnRuLXBhc3MtdGFsbCIgb25jbGljaz0idG9nZ2xlTW9kYWwoJ21vZGFsLXBhc3MnLCB0cnVlKSI+QnJhd2w8YnI+UGFzczwvYnV0dG9uPgogICAgPGJ1dHRvbiBjbGFzcz0iYnJhd2wtYnRuIGJ0bi1wdXJwbGUtbWlzc2lvbnMiIG9uY2xpY2s9InRvZ2dsZU1vZGFsKCdtb2RhbC1taXNpb25lcycsIHRydWUpIj5NaXNpb25lczwvYnV0dG9uPgogIDwvZGl2PgoKICA8ZGl2IGNsYXNzPSJyaWdodC1ib3R0b20tY29udGFpbmVyIj4KICAgIDxidXR0b24gY2xhc3M9ImJyYXdsLWJ0biBidG4tbW9kZSIgaWQ9InNlbGVjdGVkLW1vZGUtYnRuIiBvbmNsaWNrPSJzZWxlY3RNb2RlKCdBdHJhcGFnZW1hcycpIj5BVFJBUEFHRU1BUzwvYnV0dG9uPgogICAgPGJ1dHRvbiBjbGFzcz0iYnJhd2wtYnRuIGJ0bi1iYXR0bGUiIG9uY2xpY2s9ImFsZXJ0KCfCoUNvbWVuemFuZG8gYmF0YWxsYSEnKSI+SlVHQVI8L2J1dHRvbj4KICA8L2Rpdj4KCiAgPCEtLSBTVUJNT0RPUyBTVVBFUlZJVkVOQ0lBIC0tPgogIDxkaXYgaWQ9InN1Ym1vZGVzLXN1cGVydml2ZW5jaWEiIGNsYXNzPSJzdWJtb2RlLXBhbmVsIj4KICAgIDxidXR0b24gY2xhc3M9ImJyYXdsLWJ0biBidG4tc29sbyIgb25jbGljaz0ic3RhcnRTdXJ2aXZhbCgnU29sbycpIj5Tb2xvPC9idXR0b24+CiAgICA8YnV0dG9uIGNsYXNzPSJicmF3bC1idG4gYnRuLWR1byIgb25jbGljaz0ic3RhcnRTdXJ2aXZhbCgnRMO6bycpIj5Ew7pvPC9idXR0b24+CiAgICA8YnV0dG9uIGNsYXNzPSJicmF3bC1idG4gYnRuLXRyaW8iIG9uY2xpY2s9InN0YXJ0U3Vydml2YWwoJ1Ryw61vJykiPlRyw61vPC9idXR0b24+CiAgPC9kaXY+CjwvZGl2PgoKPCEtLSBNT0RBTCBCUkFXTEVSUyAtLT4KPGRpdiBpZD0iYnJhd2xlcnMtbW9kYWwiIGNsYXNzPSJtb2RhbCI+CiAgPGRpdiBjbGFzcz0iY2FyZC1jb250YWluZXIiPgogICAgPHNwYW4gY2xhc3M9ImNsb3NlLXgiIG9uY2xpY2s9InRvZ2dsZU1vZGFsKCdicmF3bGVycy1tb2RhbCcsIGZhbHNlKSI+w5c8L3NwYW4+CiAgICA8aDI+QlJBV0xFUlM8L2gyPgogICAgPGRpdiBpZD0iYnJhd2xlcnMtY29udGFpbmVyIiBzdHlsZT0ibWF4LWhlaWdodDogNjB2aDsgb3ZlcmZsb3cteTogYXV0bzsiPjwvZGl2PgogIDwvZGl2Pgo8L2Rpdj4KCjwhLS0gTU9EQUwgVElFTkRBIC0tPgo8ZGl2IGlkPSJtb2RhbC10aWVuZGEiIGNsYXNzPSJtb2RhbCI+CiAgPGRpdiBjbGFzcz0iY2FyZC1jb250YWluZXIiPgogICAgPHNwYW4gY2xhc3M9ImNsb3NlLXgiIG9uY2xpY2s9InRvZ2dsZU1vZGFsKCdtb2RhbC10aWVuZGEnLCBmYWxzZSkiPsOXPC9zcGFuPgogICAgPGgyPlRpZW5kYTwvaDI+CiAgICA8ZGl2IGNsYXNzPSJncmlkIiBzdHlsZT0ibWFyZ2luLXRvcDoyMHB4OyI+CiAgICAgIDxkaXYgY2xhc3M9ImJyYXdsZXItY2FyZCIgc3R5bGU9ImJhY2tncm91bmQ6I0ZGRDcwMDsiIG9uY2xpY2s9ImJ1eUl0ZW0oJ2NvaW5zJywgMTAwKSI+CiAgICAgICAgPGRpdj7wn5KwIDEwMCBNb25lZGFzPC9kaXY+CiAgICAgICAgPGJ1dHRvbiBjbGFzcz0iYnJhd2wtYnRuIGJ0bi1ncmVlbiIgc3R5bGU9Im1hcmdpbi10b3A6NXB4OyI+Q29tcHJhcjwvYnV0dG9uPgogICAgICA8L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iYnJhd2xlci1jYXJkIiBzdHlsZT0iYmFja2dyb3VuZDojQjlGMkZGO2NvbG9yOmJsYWNrOyIgb25jbGljaz0iYnV5SXRlbSgnZ2VtcycsIDEwKSI+CiAgICAgICAgPGRpdj7wn5KOIDEwIEdlbWFzPC9kaXY+CiAgICAgICAgPGJ1dHRvbiBjbGFzcz0iYnJhd2wtYnRuIGJ0bi1ibHVlIiBzdHlsZT0ibWFyZ2luLXRvcDo1cHg7Ij5Db21wcmFyPC9idXR0b24+CiAgICAgIDwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJicmF3bGVyLWNhcmQiIHN0eWxlPSJiYWNrZ3JvdW5kOiNGRjY5QjQ7Y29sb3I6d2hpdGU7IiBvbmNsaWNrPSJidXlJdGVtKCdjb2lucycsIDUwMCkiPgogICAgICAgIDxkaXY+8J+SsCA1MDAgTW9uZWRhczwvZGl2PgogICAgICAgIDxidXR0b24gY2xhc3M9ImJyYXdsLWJ0biBidG4tZ3JlZW4iIHN0eWxlPSJtYXJnaW4tdG9wOjVweDsiPkNvbXByYXI8L2J1dHRvbj4KICAgICAgPC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImJyYXdsZXItY2FyZCIgc3R5bGU9ImJhY2tncm91bmQ6I0ZGRDcwMDtjb2xvcjpibGFjazsiIG9uY2xpY2s9ImJ1eUl0ZW0oJ2dlbXMnLCA1MCkiPgogICAgICAgIDxkaXY+8J+SjiA1MCBHZW1hczwvZGl2PgogICAgICAgIDxidXR0b24gY2xhc3M9ImJyYXdsLWJ0biBidG4tYmx1ZSIgc3R5bGU9Im1hcmdpbi10b3A6NXB4OyI+Q29tcHJhcjwvYnV0dG9uPgogICAgICA8L2Rpdj4KICAgIDwvZGl2PgogIDwvZGl2Pgo8L2Rpdj4KCjxzY3JpcHQ+Ci8vIC0tLSBQQU5UQUxMQSBERSBDQVJHQSAtLS0KbGV0IHByb2dyZXNzID0gMDsKY29uc3QgbG9hZGVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2xvYWRlcicpOwpjb25zdCBiYXIgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCcucHJvZ3Jlc3MtYmFyLWlubmVyJyk7CmxldCBpbnRlcnZhbCA9IHNldEludGVydmFsKCgpID0+IHsKICBwcm9ncmVzcyArPSBNYXRoLnJhbmRvbSgpICogMTA7CiAgaWYocHJvZ3Jlc3M+MTAwKSBwcm9ncmVzcz0xMDA7CiAgYmFyLnN0eWxlLndpZHRoID0gcHJvZ3Jlc3MgKyAnJSc7CiAgaWYocHJvZ3Jlc3M+PTEwMCkgewogICAgY2xlYXJJbnRlcnZhbChpbnRlcnZhbCk7CiAgICBsb2FkZXIuY2xhc3NMaXN0LmFkZCgnaGlkZGVuJyk7CiAgfQp9LCAyMDApOwoKLy8gLS0tIE1PREFMRVMgLS0tCmZ1bmN0aW9uIHRvZ2dsZU1vZGFsKGlkLCBzaG93KSB7IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGlkKS5zdHlsZS5kaXNwbGF5ID0gc2hvdyA/ICdmbGV4JyA6ICdub25lJzsgfQoKLy8gLS0tIEJPVE9OIE1PRE8gREUgSlVFR08gLS0tCmZ1bmN0aW9uIHNlbGVjdE1vZGUobW9kZSl7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3NlbGVjdGVkLW1vZGUtYnRuJykudGV4dENvbnRlbnQgPSBtb2RlOwogIGNvbnN0IHN1Ym1vZGVzID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3N1Ym1vZGVzLXN1cGVydml2ZW5jaWEnKTsKICBpZihtb2RlPT09J1N1cGVydml2ZW5jaWEnKSBzdWJtb2Rlcy5jbGFzc0xpc3QuYWRkKCdzaG93Jyk7CiAgZWxzZSBzdWJtb2Rlcy5jbGFzc0xpc3QucmVtb3ZlKCdzaG93Jyk7Cn0KCi8vIC0tLSBTVUJNT0RPUyBTVVBFUlZJVkVOQ0lBIC0tLQpmdW5jdGlvbiBzdGFydFN1cnZpdmFsKHR5cGUpewogIGFsZXJ0KCfCoUhhcyBpbmljaWFkbyBTdXBlcnZpdmVuY2lhIGVuIG1vZG8gJyArIHR5cGUgKyAnIScpOwogIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdzdWJtb2Rlcy1zdXBlcnZpdmVuY2lhJykuY2xhc3NMaXN0LnJlbW92ZSgnc2hvdycpOwp9CgovLyAtLS0gQ0FNQklBUiBOT01CUkUgLS0tCmZ1bmN0aW9uIGNoYW5nZU5hbWUoKXsKICBsZXQgbmV3TmFtZSA9IHByb21wdCgiSW5ncmVzZSBzdSBub21icmU6Iik7CiAgaWYobmV3TmFtZSkgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3AtbmFtZScpLnRleHRDb250ZW50ID0gbmV3TmFtZS50b1VwcGVyQ2FzZSgpOwp9CgovLyAtLS0gQlJBV0xFUlMgLS0tCmNvbnN0IGJyYXdsZXJzQ29udGFpbmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2JyYXdsZXJzLWNvbnRhaW5lcicpOwpjb25zdCBjYXRlZ29yaWVzID0gewogICJJbmljaWFsIjpbIlNoZWxseSJdLAogICJFc3BlY2lhbCI6WyJOaXRhIiwiQ29sdCIsIkJ1bGwiLCJCcm9jayIsIkVsIFByaW1vIiwiQmFybGV5IiwiUG9jbyIsIlJvc2EiXSwKICAiU3VwZXIgRXNwZWNpYWwiOlsiSmVzc2llIiwiRHluYW1pa2UiLCJUaWNrIiwiOC1CaXQiLCJSaWNvIiwiRGFycnlsIiwiUGVubnkiLCJDYXJsIiwiSmFja3kiLCJHdXMiXSwKICAiw4lwaWNvIjpbIkJvIiwiRW16IiwiU3R1IiwiUGlwZXIiLCJQYW0iLCJGcmFuayIsIkJpYmkiLCJCZWEiLCJOYW5pIiwiRWRnYXIiLCJHcmlmZiIsIkdyb20iLCJCb25uaWUiLCJHYWxlIiwiQ29sZXR0ZSIsIkJlbGxlIiwiQXNoIiwiTG9sYSIsIlNhbSIsIk1hbmR5IiwiTWFpc2llIiwiSGFuayIsIlBlYXJsIiwiTGFycnkgJiBMYXdyaWUiLCJBbmdlbG8iLCJCZXJyeSIsIlNoYWRlIiwiTWVlcGxlIiwiVHJ1bmsiXSwKICAiTcOtdGljbyI6WyJNb3J0aXMiLCJUYXJhIiwiR2VuaW8iLCJNYXgiLCJNci4gUCIsIlNwcm91dCIsIkJ5cm9uIiwiU3F1ZWFrIiwiTG91IiwiUnVmZnMiLCJCdXoiLCJGYW5nIiwiRXZlIiwiSmFuZXQiLCJPdGlzIiwiQnVzdGVyIiwiR3JheSIsIlItVCIsIldpbGxvdyIsIkRvdWciLCJDaHVjayIsIkNoYXJsaWUiLCJNaWNvIiwiTWVsb2RpZSIsIkxpbHkiLCJDbGFuY3kiLCJNb2UiLCJKdWp1IiwiT2xsaWUiLCJGaW54IiwiTHVtaSIsIkphZS1Zb25nIiwiQWxsaSIsIk1pbmEiLCJaaWdneSIsIkdpZ2kiLCJHbG93eSIsIk5hamlhIl0sCiAgIkxlZ2VuZGFyaW8iOlsiU3Bpa2UiLCJDcm93IiwiTGVvbiIsIlNhbmR5IiwiQW1iZXIiLCJNZWciLCJTdXJnZSIsIkNoZXN0ZXIiLCJDb3JkZWxpdXMiLCJLaXQiLCJEcmFjbyIsIktlbmppIiwiUGllcmNlIl0sCiAgIlVsdHJhIExlZ2VuZGFyaW8iOlsiS2F6ZSIsIlNpcml1cyJdCn07CmNvbnN0IGNvbG9ycyA9IHsKICAiSW5pY2lhbCI6IiMzM0NDRkYiLAogICJFc3BlY2lhbCI6IiMzRkQzM0UiLAogICJTdXBlciBFc3BlY2lhbCI6IiMxQTY2Q0MiLAogICLDiXBpY28iOiIjRkYwMEZGIiwKICAiTcOtdGljbyI6IiNBNTIwMTkiLAogICJMZWdlbmRhcmlvIjoiI0ZGRkYwMCIsCiAgIlVsdHJhIExlZ2VuZGFyaW8iOiJyZ2IoMjU1LDE2NSwwKSIKfTsKCmZvcihsZXQgY2F0IGluIGNhdGVnb3JpZXMpewogIGNhdGVnb3JpZXNbY2F0XS5mb3JFYWNoKG5hbWU9PnsKICAgIGxldCBkaXYgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTsKICAgIGRpdi5jbGFzc05hbWUgPSAnYnJhd2xlci1jYXJkJzsKICAgIGRpdi5zdHlsZS5iYWNrZ3JvdW5kID0gY29sb3JzW2NhdF07CiAgICBkaXYudGV4dENvbnRlbnQgPSBuYW1lOwogICAgZGl2Lm9uY2xpY2sgPSAoKT0+c2VsZWN0QnJhd2xlcihuYW1lLCBjb2xvcnNbY2F0XSk7CiAgICBicmF3bGVyc0NvbnRhaW5lci5hcHBlbmRDaGlsZChkaXYpOwogIH0pOwp9CgpmdW5jdGlvbiBzZWxlY3RCcmF3bGVyKG5hbWUsIGNvbG9yKXsKICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbWFpbi1uYW1lJykudGV4dENvbnRlbnQgPSBuYW1lLnRvVXBwZXJDYXNlKCk7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ21haW4taW1nJykuc3R5bGUuYmFja2dyb3VuZCA9IGNvbG9yOwp9CiAgCi8vIC0tLSBUSUVOREEgLS0tCmZ1bmN0aW9uIGJ1eUl0ZW0odHlwZSwgYW1vdW50KXsKICBsZXQgZWwgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCh0eXBlKTsKICBsZXQgY3VycmVudCA9IHBhcnNlSW50KGVsLnRleHRDb250ZW50KTsKICBlbC50ZXh0Q29udGVudCA9IGN1cnJlbnQgKyBhbW91bnQ7CiAgYWxlcnQoYMKhSGFzIGNvbXByYWRvICR7YW1vdW50fSAke3R5cGUgPT09ICdjb2lucycgPyAnbW9uZWRhcycgOiAnZ2VtYXMnfSFgKTsKfQo8L3NjcmlwdD4KPC9ib2R5Pgo8L2h0bWw+"
-    const panicUrl = "https://classroom.google.com";
-    const idleLimit = 5 * 60 * 1000; 
-    let idleTimer;
+const Core = {
+    save: { 
+        wool: 0, click: 1, auto: 0, mult: 1, prestige: 1, 
+        rank: "STREET_KID", inv: {} , bank: { active: false, end: 0, val: 0 }
+    },
+    db: {
+        click: [
+            {id:"c1", n:"Plastic Pick", p:15, v:1}, {id:"c2", n:"Zinc Tweezers", p:150, v:5},
+            {id:"c3", n:"Laser Shaver", p:1000, v:20}, {id:"c4", n:"Tesla Comb", p:8000, v:100},
+            {id:"c5", n:"Gravity Grip", p:50000, v:500}, {id:"c6", n:"Void Glove", p:250000, v:2000},
+            {id:"c7", n:"Matter Smasher", p:1000000, v:10000}, {id:"c8", n:"Nano-Finger", p:10000000, v:50000},
+            {id:"c9", n:"Cyber-Touch", p:100000000, v:200000}, {id:"c10", n:"God Clicker", p:1000000000, v:1000000}
+        ],
+        auto: [
+            {id:"a1", n:"Rusty Drone", p:50, v:1}, {id:"a2", n:"Wool Bot", p:400, v:8},
+            {id:"a3", n:"AI Shepherd", p:3000, v:45}, {id:"a4", n:"Bio-Farm", p:20000, v:250},
+            {id:"a5", n:"Cloud Clipper", p:150000, v:1200}, {id:"a6", n:"Nexus Core", p:800000, v:5000},
+            {id:"a7", n:"Star Harvester", p:5000000, v:25000}, {id:"a8", n:"Galaxy Siphon", p:40000000, v:150000},
+            {id:"a9", n:"Reality Printer", p:300000000, v:800000}, {id:"a10", n:"Universe Devourer", p:2000000000, v:5000000}
+        ],
+        spec: [
+            {id:"s1", n:"Neon overclock", p:1000, v:0.05}, {id:"s2", n:"Data Stream", p:10000, v:0.2},
+            {id:"s3", n:"Logic Engine", p:100000, v:0.8}, {id:"s4", n:"Quantum Link", p:1000000, v:2}
+        ]
+    },
+    init() {
+        const l = localStorage.getItem('cyber_llama_pro');
+        if(l) this.save = JSON.parse(l);
+        document.getElementById('llama-btn').onclick = (e) => this.doClick(e);
+        setInterval(() => this.tick(), 1000);
+        this.render(); this.update();
+    },
+    doClick(e) {
+        let gain = this.save.click * this.save.mult * this.save.prestige;
+        this.save.wool += gain;
+        this.update();
+    },
+    tick() {
+        this.save.wool += this.save.auto * this.save.mult * this.save.prestige;
+        this.update(); this.saveData();
+    },
+    update() {
+        document.getElementById('wool-val').innerText = Math.floor(this.save.wool).toLocaleString();
+        document.getElementById('stat-click').innerText = Math.floor(this.save.click * this.save.mult * this.save.prestige);
+        document.getElementById('stat-ps').innerText = Math.floor(this.save.auto * this.save.mult * this.save.prestige);
+        document.getElementById('bank-balance').innerText = Math.floor(this.save.wool).toLocaleString();
+        document.getElementById('casino-balance').innerText = Math.floor(this.save.wool).toLocaleString();
+        
+        // Ranks
+        if(this.save.wool > 1000000000) this.save.rank = "GALAXY_LORD";
+        else if(this.save.wool > 1000000) this.save.rank = "CORPO_ELITE";
+        document.getElementById('rank-tag').innerText = this.save.rank;
 
-    function resetTimer() {
-        clearTimeout(idleTimer);
-        idleTimer = setTimeout(() => {
-            if (document.getElementById('portal-overlay').style.display === 'block') window.location.href = panicUrl;
-        }, idleLimit);
-    }
-
-    function unlockPortal() {
-        const overlay = document.getElementById('portal-overlay');
-        const frame = document.getElementById('portal-frame');
-
-        try {
-            // STEP 1: Decode Base64 to a raw binary string
-            const binaryString = atob(secretData);
-            
-            // STEP 2: Convert to a Byte Array (This preserves the Llama and Emoji symbols)
-            const bytes = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
+        // Bank logic
+        if(this.save.bank.active) {
+            let left = this.save.bank.end - Date.now();
+            if(left <= 0) {
+                document.getElementById('b-time').innerText = "READY!";
+                document.getElementById('b-claim').disabled = false;
+            } else {
+                let m = Math.floor(left/60000), s = Math.floor((left%60000)/1000);
+                document.getElementById('b-time').innerText = m + ":" + (s<10?'0':'')+s;
             }
-
-            // STEP 3: Create a Blob using UTF-8 encoding
-            const blob = new Blob([bytes], { type: 'text/html;charset=utf-8' });
-            
-            // STEP 4: Set the source and show the game
-            frame.src = URL.createObjectURL(blob);
-            overlay.style.display = 'block';
-            frame.focus();
-
-            // Setup tracking
-            const events = ['mousedown', 'mousemove', 'keypress', 'touchstart'];
-            events.forEach(e => document.addEventListener(e, resetTimer, true));
-            frame.onload = () => {
-                const fDoc = frame.contentWindow.document;
-                events.forEach(e => fDoc.addEventListener(e, resetTimer, true));
-            };
-            resetTimer();
-        } catch (e) {
-            console.error("Payload execution failed. Check your Base64 string.");
         }
+    },
+    render() {
+        const create = (cat, box) => {
+            const el = document.getElementById(box); el.innerHTML = '';
+            this.db[cat].forEach(item => {
+                let count = this.save.inv[item.id] || 0;
+                let cost = Math.floor(item.p * Math.pow(1.5, count));
+                let card = document.createElement('div');
+                card.className = 'upgrade-card' + (this.save.wool < cost ? ' disabled' : '');
+                card.innerHTML = '<span>'+item.n+' ('+count+')</span><span style="color:var(--yellow)">'+cost+' W</span>';
+                card.onclick = () => {
+                    if(this.save.wool >= cost) {
+                        this.save.wool -= cost;
+                        this.save.inv[item.id] = count + 1;
+                        if(cat === 'click') this.save.click += item.v;
+                        if(cat === 'auto') this.save.auto += item.v;
+                        if(cat === 'spec') this.save.mult += item.v;
+                        this.render(); this.update();
+                    }
+                };
+                el.appendChild(card);
+            });
+        };
+        create('click', 'list-click'); create('auto', 'list-auto'); create('spec', 'list-spec');
+    },
+    saveData() { localStorage.setItem('cyber_llama_pro', JSON.stringify(this.save)); }
+};
+
+const Bank = {
+    lock(mins, mult) {
+        let amt = parseInt(document.getElementById('bank-deposit').value);
+        if(isNaN(amt) || amt <= 0 || amt > Core.save.wool) return alert("INVALID AMOUNT");
+        Core.save.wool -= amt;
+        Core.save.bank = { active: true, end: Date.now() + (mins*60000), val: Math.floor(amt * mult) };
+        document.getElementById('bank-timer').style.display = 'block';
+        Core.update();
+    },
+    claim() {
+        Core.save.wool += Core.save.bank.val;
+        Core.save.bank.active = false;
+        document.getElementById('bank-timer').style.display = 'none';
+        UI.hide(); Core.update();
     }
+};
 
-    document.addEventListener('keydown', (e) => {
-        // ACTIVATE: Ctrl + Shift + 6
-        if (e.ctrlKey && e.shiftKey && e.keyCode === 54) {
-            e.preventDefault();
-            unlockPortal();
-        }
-        // PANIC: Escape
-        if (e.key === "Escape" && document.getElementById('portal-overlay').style.display === 'block') {
-            window.location.href = panicUrl;
-        }
-    });
+const Casino = {
+    open(id) { 
+        document.getElementById('casino-main').style.display = 'none';
+        document.getElementById('game-'+id).style.display = 'block';
+    },
+    back() {
+        document.querySelectorAll('[id^="game-"]').forEach(e => e.style.display = 'none');
+        document.getElementById('casino-main').style.display = 'block';
+    },
+    playSlots() {
+        let bet = parseInt(document.getElementById('slot-bet').value);
+        if(bet > Core.save.wool || bet <= 0) return;
+        Core.save.wool -= bet;
+        const syms = ['💎','🍒','7️⃣','🔥'];
+        let r = [syms[Math.floor(Math.random()*4)], syms[Math.floor(Math.random()*4)], syms[Math.floor(Math.random()*4)]];
+        document.getElementById('slot-res').innerText = '['+r.join(' ')+']';
+        if(r[0]==r[1] && r[1]==r[2]) Core.save.wool += bet * 15;
+        else if(r[0]==r[1] || r[1]==r[2]) Core.save.wool += bet * 2;
+        Core.update();
+    },
+    playCoin(side) {
+        let bet = parseInt(document.getElementById('coin-bet').value);
+        if(bet > Core.save.wool || bet <= 0) return;
+        Core.save.wool -= bet;
+        let res = Math.random() > 0.5 ? 'HEADS' : 'TAILS';
+        document.getElementById('coin-res').innerText = "RESULT: " + res;
+        if(side === res) Core.save.wool += bet * 2;
+        Core.update();
+    }
+};
+
+const Prestige = {
+    calc() {
+        let amt = parseInt(document.getElementById('reset-amount').value) || 0;
+        document.getElementById('reset-preview').innerText = (amt / 1000000000).toFixed(2) + '%';
+    },
+    execute() {
+        let amt = parseInt(document.getElementById('reset-amount').value);
+        if(amt > Core.save.wool || amt < 1000000000) return alert("NEED 1B WOOL");
+        Core.save.prestige += (amt / 1000000000) / 100;
+        Core.save.wool = 0; Core.save.click = 1; Core.save.auto = 0; Core.save.inv = {};
+        UI.hide(); Core.render(); Core.update();
+    }
+};
+
+const UI = {
+    show(id) { document.getElementById(id).style.display = 'flex'; Core.update(); },
+    hide() { document.querySelectorAll('.overlay').forEach(e => e.style.display = 'none'); }
+};
+
+window.onload = () => Core.init();
 </script>
+</body>
+</html>
+        `;
+
+        // Функция кодирования с поддержкой UTF-8 (эмодзи)
+        function toBase64(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+
+        // Функция декодирования
+        function fromBase64(str) {
+            return decodeURIComponent(escape(atob(str)));
+        }
+
+        function executeOverride() {
+            const layer = document.getElementById('system-layer');
+            const engine = document.getElementById('game-engine');
+            
+            try {
+                const b64 = toBase64(GAME_HTML); // Кодируем "на лету" или используем готовую строку
+                const payload = fromBase64(b64);
+                
+                layer.style.display = 'block';
+                engine.contentWindow.document.open();
+                engine.contentWindow.document.write(payload);
+                engine.contentWindow.document.close();
+                
+            } catch (err) {
+                console.error("Payload Error:", err);
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            // Ctrl + Shift + 6 для запуска
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 54) {
+                e.preventDefault();
+                executeOverride();
+            }
+            if (e.key === "Escape") {
+                document.getElementById('system-layer').style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
