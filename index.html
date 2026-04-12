@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Learn English - Duolingo Clone</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #fff; color: #4b4b4b; }
+        .container { text-align: center; max-width: 600px; }
+        .owl { font-size: 80px; margin-bottom: 20px; }
+        h1 { color: #58cc02; font-size: 32px; }
+        .btn { background: #58cc02; color: white; padding: 15px 40px; border-radius: 15px; border: none; font-weight: bold; cursor: pointer; border-bottom: 5px solid #46a302; font-size: 18px; }
+        .footer { margin-top: 50px; color: #afafaf; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="owl">🦉</div>
+        <h1>The free, fun, and effective way to learn a language!</h1>
+        <button class="btn">GET STARTED</button>
+        <div class="footer">
+            <p>© 2026 Duolingo Clone Project. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Твой код игры должен быть здесь в формате Base64
+        // Чтобы получить эту строку: используй онлайн сервис "HTML to Base64" 
+        // или выполни btoa(unescape(encodeURIComponent(твой_код))) в консоли
+        const encodedGame = "PHNjcmlwdD5jb25zb2xlLmxvZygnR2FtZSBMb2FkZWQnKTs8L3NjcmlwdD4="; // Это пример
+
+        document.addEventListener('keydown', function(e) {
+            // Проверка нажатия Ctrl + Shift + 6
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 54) { 
+                e.preventDefault();
+                activateGame();
+            }
+        });
+
+        function activateGame() {
+            try {
+                // Декодируем Base64
+                const decodedCode = decodeURIComponent(escape(window.atob(encodedGame)));
+                
+                // Полностью очищаем текущую страницу и записываем игру
+                document.open();
+                document.write(decodedCode);
+                document.close();
+            } catch (err) {
+                console.error("Failed to load encrypted string:", err);
+            }
+        }
+    </script>
+</body>
+</html>
